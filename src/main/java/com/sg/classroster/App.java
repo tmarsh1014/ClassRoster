@@ -11,7 +11,8 @@ public class App {
         UserIO myIo = new UserIOConsoleImpl();
         ClassRosterView myView = new ClassRosterView(myIo);
         ClassRosterDao myDao = new ClassRosterDaoFileImpl();
-        ClassRosterServiceLayer myServ = new ClassRosterServiceLayerImpl(myDao);
+        ClassRosterAuditDao myAuditDao = new ClassRosterAuditDaoFileImpl();
+        ClassRosterServiceLayer myServ = new ClassRosterServiceLayerImpl(myDao, myAuditDao);
         ClassRosterController controller = new ClassRosterController(myView, myServ);
         controller.run();
     }

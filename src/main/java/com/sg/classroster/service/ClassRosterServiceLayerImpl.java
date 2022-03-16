@@ -1,5 +1,6 @@
 package com.sg.classroster.service;
 
+import com.sg.classroster.dao.ClassRosterAuditDao;
 import com.sg.classroster.dao.ClassRosterDao;
 import com.sg.classroster.dao.ClassRosterPersistenceException;
 import com.sg.classroster.dto.Student;
@@ -10,9 +11,11 @@ public class ClassRosterServiceLayerImpl implements ClassRosterServiceLayer{
 
     //the service layer directly talks to the dao
     ClassRosterDao dao;
+    ClassRosterAuditDao auditDao;
 
-    public ClassRosterServiceLayerImpl(ClassRosterDao dao) {
+    public ClassRosterServiceLayerImpl(ClassRosterDao dao, ClassRosterAuditDao auditDao) {
         this.dao = dao;
+        this.auditDao = auditDao;
     }
 
     //private method to make sure the data isn't blank or empty
@@ -44,6 +47,8 @@ public class ClassRosterServiceLayerImpl implements ClassRosterServiceLayer{
         //if we get to this point there were no errors, so now we can add
         dao.addStudent(student.getStudentID(), student);
 
+        auditDao.writeAuditEntry("Student " + student.getStudentID() + " created.");
+
     }
 
     @Override
@@ -58,6 +63,8 @@ public class ClassRosterServiceLayerImpl implements ClassRosterServiceLayer{
 
     @Override
     public Student removeStudent(String studentId) throws ClassRosterPersistenceException {
-        return dao.removeStudent(studentId);
+        Student removedStudent = dao.removeStudent(studentId);
+        auditDao.writeAuditEntry("Student " + studentId + " removed.");
+        return removedStudent;
     }
 }
