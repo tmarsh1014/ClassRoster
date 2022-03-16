@@ -16,7 +16,7 @@ public class ClassRosterDaoFileImpl implements ClassRosterDao {
 
 
     @Override
-    public Student addStudent(String studentId, Student student) throws ClassRosterDaoException {
+    public Student addStudent(String studentId, Student student) throws ClassRosterPersistenceException {
         loadRoster();
         Student newStudent = students.put(studentId, student);
         writeRoster();
@@ -24,19 +24,19 @@ public class ClassRosterDaoFileImpl implements ClassRosterDao {
     }
 
     @Override
-    public List<Student> getAllStudents() throws ClassRosterDaoException {
+    public List<Student> getAllStudents() throws ClassRosterPersistenceException {
         loadRoster();
         return new ArrayList<>(students.values());
     }
 
     @Override
-    public Student getStudent(String studentId) throws ClassRosterDaoException{
+    public Student getStudent(String studentId) throws ClassRosterPersistenceException {
         loadRoster();
         return students.get(studentId);
     }
 
     @Override
-    public Student removeStudent(String studentId) throws ClassRosterDaoException{
+    public Student removeStudent(String studentId) throws ClassRosterPersistenceException {
         loadRoster();
         Student removedStudent = students.remove(studentId);
         writeRoster();
@@ -55,7 +55,7 @@ public class ClassRosterDaoFileImpl implements ClassRosterDao {
     }
 
     //scan file line by line and decode lines into students and add them to hashmap
-    private void loadRoster() throws ClassRosterDaoException {
+    private void loadRoster() throws ClassRosterPersistenceException {
         Scanner scanner;
 
         try {
@@ -63,7 +63,7 @@ public class ClassRosterDaoFileImpl implements ClassRosterDao {
             scanner = new Scanner(new BufferedReader(
                     new FileReader(ROSTER_FILE)));
         }catch (FileNotFoundException e){
-            throw new ClassRosterDaoException("Could not load roster data into memory.",e);
+            throw new ClassRosterPersistenceException("Could not load roster data into memory.",e);
         }
         //hold the most recent line read from file
         String currentLine;
@@ -93,13 +93,13 @@ public class ClassRosterDaoFileImpl implements ClassRosterDao {
     }
 
     //write all students in the roster out to the file
-    private void writeRoster() throws ClassRosterDaoException{
+    private void writeRoster() throws ClassRosterPersistenceException {
         PrintWriter out;
 
         try {
             out = new PrintWriter(new FileWriter(ROSTER_FILE));
         } catch (IOException e){
-            throw new ClassRosterDaoException("Could not save student data.", e);
+            throw new ClassRosterPersistenceException("Could not save student data.", e);
         }
 
         String studentAsText;
