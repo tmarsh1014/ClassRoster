@@ -11,9 +11,16 @@ public class ClassRosterDaoFileImpl implements ClassRosterDao {
     //lines in the file will look like:
     //<studentid>::<first name>::<last name>::<cohort>
     //EX: 0001::Joe::Cool::Java - Jan 2016
-    public static final String ROSTER_FILE = "roster.txt";
+    public final String ROSTER_FILE;
     public static final String DELIMITER = "::";
 
+    public ClassRosterDaoFileImpl() {
+        ROSTER_FILE = "roster.txt";
+    }
+
+    public ClassRosterDaoFileImpl(String rosterTextFile) {
+        ROSTER_FILE = rosterTextFile;
+    }
 
     @Override
     public Student addStudent(String studentId, Student student) throws ClassRosterPersistenceException {
